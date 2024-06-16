@@ -2,24 +2,302 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>Spark3</groupId>
-  <artifactId>Spark3</artifactId>
+  <groupId>SparkPlay</groupId>
+  <artifactId>SparkPlay</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>Spark3</name>
+  <name>SparkPlay</name>
   <url>http://maven.apache.org</url>
 
   <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <encoding>UTF-8</encoding>
+    <scala.version>2.12.15</scala.version>
+    <scala.compat.version>2.12</scala.compat.version>
+    <avro.version>1.8.2</avro.version>
+    <jdkLevel>11</jdkLevel>
+    <sparkVersion>3.2.0</sparkVersion>
+    <kafka.version>2.12.0</kafka.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
   <dependencies>
+    <!--Scala-->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+      <version>${scala.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-compiler</artifactId>
+      <version>${scala.version}</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.scalatest/scalatest -->
+    <dependency>
+      <groupId>org.scalatest</groupId>
+      <artifactId>scalatest_2.12</artifactId>
+      <version>3.0.1</version>
       <scope>test</scope>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/org.scalatest/scalatest-funsuite -->
+    <dependency>
+      <groupId>org.scalatest</groupId>
+      <artifactId>scalatest-funsuite_2.12</artifactId>
+      <version>3.2.16</version>
+      <scope>test</scope>
+    </dependency>
+
+
+    <!--Spark-->
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-streaming_${scala.compat.version}</artifactId>
+      <version>${sparkVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-core_${scala.compat.version}</artifactId>
+      <version>${sparkVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-sql_${scala.compat.version}</artifactId>
+      <version>${sparkVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.typesafe.scala-logging</groupId>
+      <artifactId>scala-logging_${scala.compat.version}</artifactId>
+      <version>3.9.4</version>
+    </dependency>
+
+    <!-- kafka -->
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-sql-kafka-0-10_${scala.compat.version}</artifactId>
+      <version>${sparkVersion}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>net.jpountz.lz4</groupId>
+          <artifactId>lz4</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-avro_${scala.compat.version}</artifactId>
+      <version>${sparkVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-streaming-kafka-0-10_${scala.compat.version}</artifactId>
+      <version>${sparkVersion}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>net.jpountz.lz4</groupId>
+          <artifactId>lz4</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <!--for mongodb-->
+    <dependency>
+      <groupId>org.mongodb.spark</groupId>
+      <artifactId>mongo-spark-connector_2.12</artifactId>
+      <version>3.0.2</version>
+    </dependency>
+
+    <!--for elastic-->
+    <dependency>
+      <groupId>org.elasticsearch</groupId>
+      <artifactId>elasticsearch-spark-30_2.12</artifactId>
+      <version>8.6.0</version>
+    </dependency>
+
+    <!--for postgres-->
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.2.22</version>
+    </dependency>
+
+<!--    &lt;!&ndash; for adx &ndash;&gt;
+    <dependency>
+      <groupId>com.microsoft.azure.kusto</groupId>
+      <artifactId>kusto-spark_3.0_${scala.compat.version}</artifactId>
+      <version>3.1.9</version>
+    </dependency>
+
+    &lt;!&ndash;azure hadoop&ndash;&gt;
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-azure</artifactId>
+      <version>3.3.1</version>
+    </dependency>-->
+
+    <!-- for redis -->
+    <dependency>
+      <groupId>com.redislabs</groupId>
+      <artifactId>spark-redis</artifactId>
+      <version>2.4.0</version>
+    </dependency>
+
+    <!-- bigquery -->
+    <dependency>
+      <groupId>com.google.cloud.spark</groupId>
+      <artifactId>spark-bigquery-with-dependencies_${scala.compat.version}</artifactId>
+      <version>0.27.1</version>
+    </dependency>
+
+    <!--Http source-->
+    <dependency>
+      <groupId>org.scalaj</groupId>
+      <artifactId>scalaj-http_${scala.compat.version}</artifactId>
+      <version>2.3.0</version>
+    </dependency>
+
+    <!--Akka -->
+    <dependency>
+      <groupId>com.typesafe.akka</groupId>
+      <artifactId>akka-actor_2.12</artifactId>
+      <version>2.6.20</version>
+    </dependency>
+
+    <!-- Test -->
+    <!--        <dependency>
+                <groupId>org.specs2</groupId>
+                <artifactId>specs2-junit_2.12</artifactId>
+                <version>4.19.0</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.scalatest</groupId>
+                <artifactId>scalatest-funspec_${scala.compat.version}</artifactId>
+                <version>3.3.0-SNAP3</version>
+                <scope>test</scope>
+            </dependency>-->
+    <dependency>
+      <groupId>io.delta</groupId>
+      <artifactId>delta-core_2.12</artifactId>
+      <version>2.1.0</version>
+    </dependency>
+<!--    <dependency>
+      <groupId>com.microsoft.azure</groupId>
+      <artifactId>azure-eventhubs-spark_${scala.compat.version}</artifactId>
+      <version>2.3.15</version>
+    </dependency>-->
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-scala_2.12</artifactId>
+      <version>1.17.14</version>
+      <scope>test</scope>
+    </dependency>
+<!--    <dependency>
+      <groupId>com.azure</groupId>
+      <artifactId>azure-identity</artifactId>
+      <version>1.8.3</version>
+      <scope>compile</scope>
+    </dependency>-->
+
+    <dependency>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-install-plugin</artifactId>
+      <version>2.4</version>
+    </dependency>
+    <!--<dependency>
+        <groupId>org.scalatest</groupId>
+        <artifactId>scalatest_2.12</artifactId>
+        <version>3.2.10</version>
+        <scope>test</scope>
+    </dependency>-->
+
   </dependencies>
+  <build>
+    <sourceDirectory>src/main/scala</sourceDirectory>
+    <testSourceDirectory>src/test/scala</testSourceDirectory>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.5.1</version>
+        <configuration>
+          <source>${jdkLevel}</source>
+          <target>${jdkLevel}</target>
+          <showDeprecation>true</showDeprecation>
+          <showWarnings>true</showWarnings>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>net.alchim31.maven</groupId>
+        <artifactId>scala-maven-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compile</goal>
+              <goal>testCompile</goal>
+            </goals>
+            <configuration>
+              <args>
+                <arg>-dependencyfile</arg>
+                <arg>${project.build.directory}/.scala_dependencies</arg>
+              </args>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.18.1</version>
+        <configuration>
+          <useFile>false</useFile>
+          <disableXmlReport>true</disableXmlReport>
+          <includes>
+            <include>**/*Test.*</include>
+            <include>**/*Suite.*</include>
+          </includes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.scalatest</groupId>
+        <artifactId>scalatest-maven-plugin</artifactId>
+        <version>2.2.0</version>
+        <configuration>
+          <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+          <junitxml>.</junitxml>
+          <filereports>WDF TestSuite.txt</filereports>
+        </configuration>
+        <executions>
+          <execution>
+            <id>test</id>
+            <goals>
+              <goal>test</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.1.1</version>
+        <configuration>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>
